@@ -6,9 +6,7 @@ const getMarkers = async (req, res) => {
 
         return res.status(200).json(markers);
     } catch (error) {
-        console.error('Error fetching markers:', error);
-
-        return res.status(500).json({error: 'An error occurred while fetching the markers'});
+        return res.status(500).json({error: 'Ocorreu um erro ao buscar os marcadores'});
     }
 };
 
@@ -36,7 +34,29 @@ const createMarker = async (req, res) => {
     }
 }
 
+const deleteMarkers = async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const marker = await Marker.findByPk(id);
+
+        if (marker) {
+            marker.destroy()
+                .then(() => {
+                    return res.status(200).json({success: 'Marcador removido'})
+                });
+        } else {
+            return res.status(500).json({error: 'Ocorreu um erro ao buscar o marcador' + id + ' para remover'});
+        }
+
+    } catch {
+        return res.status(500).json({error: 'Ocorreu um erro ao remover o marcador' + id});
+    }
+};
+
+
 module.exports = {
     createMarker,
-    getMarkers
+    getMarkers,
+    deleteMarkers
 };

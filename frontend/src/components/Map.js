@@ -60,6 +60,24 @@ export default function Map() {
         }
     }
 
+    function removeMarker(id) {
+        if (id === null) {
+            const newMarkers = markers.filter(marker => marker.id != null);
+            setMarkers(newMarkers);
+            setSelectedMarker(null);
+        } else {
+            try {
+                doFetch('http://localhost:5001/api/markers/' + id, 'DELETE')
+                    .then(() => {
+                        setSelectedMarker(null);
+                        fetchMarkers();
+                    });
+            } catch (error) {
+                console.error('Failed to save marker:', error);
+            }
+        }
+    }
+
     return (
         <div className="container stylized">
             <div className="row">
@@ -104,6 +122,8 @@ export default function Map() {
                                 <InfoWindow position={{ lat: selectedMarker.latitude, lng: selectedMarker.longitude }} onCloseClick={() => {setSelectedMarker(null)}}>
                                     <div>
                                         {selectedMarker.text}
+                                        <br />
+                                        <button className="btn btn-danger w-100 p-0" onClick={() => {removeMarker(selectedMarker.id)}}>Remover</button>
                                     </div>
                                 </InfoWindow>
                             )}
