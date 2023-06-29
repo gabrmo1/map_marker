@@ -13,6 +13,7 @@ export default function Map() {
     const [latitude, setLatitude] = useState('');
     const [longitude, setLongitude] = useState('');
     const [text, setText] = useState('');
+    const [title, setTitle] = useState('');
     const [errors, setErrors] = useState({});
     const [markers, setMarkers] = useState([]);
     const [selectedMarker, setSelectedMarker] = useState(null);
@@ -45,12 +46,19 @@ export default function Map() {
         if (!text) {
             newErrors.text = 'O preenchimento deste campo é obrigatório';
         }
+        if (!title) {
+            newErrors.title = 'O preenchimento deste campo é obrigatório';
+        } else {
+            if (title.length > 50) {
+                newErrors.title = 'O título pode ter apenas 50 caracteres';
+            }
+        }
 
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
             try {
-                doFetchBody('http://localhost:5001/api/markers', 'POST', {latitude, longitude, text})
+                doFetchBody('http://localhost:5001/api/markers', 'POST', {latitude, longitude, title, text})
                     .then(() => {
                         fetchMarkers();
                     });
@@ -66,6 +74,7 @@ export default function Map() {
             setMarkers(newMarkers);
             setSelectedMarker(null);
         } else {
+            //TODO: Consertar erro que remove marcadores com id nulo ao dar fetch
             try {
                 doFetch('http://localhost:5001/api/markers/' + id, 'DELETE')
                     .then(() => {
@@ -78,13 +87,21 @@ export default function Map() {
         }
     }
 
+    //Usado para melhorar a visualizaçao dentro do InfoWindow
+    function formatText(text, interval) {
+        let result = '';
+        for (let i = 0; i < text.length; i += interval) {
+            result += text.substr(i, interval) + '\n';
+        }
+        return result;
+    }
+
     return (
         <div className="container stylized">
             <div className="row">
                 <div className="col-md-6">
                     <form onSubmit={handleSubmit}>
                         <h1 className="mb-5 text-center text-shadow-black">Criar marcador</h1>
-                        <hr/>
                         <div className="mb-4">
                             <label htmlFor="latitude" className="form-label">Latitude</label>
                             <input type="number" className={`form-control ${errors.latitude && 'is-invalid'}`} id="latitude" value={latitude} onChange={(e) => setLatitude(e.target.value)}/>
@@ -102,13 +119,21 @@ export default function Map() {
                         </div>
                         <hr/>
                         <div className="mb-4">
+                            <label htmlFor="texto" className="form-label">Título</label>
+                            <input type="text" className={`form-control ${errors.title && 'is-invalid'}`} id="title" value={title} onChange={(e) => setTitle(e.target.value)}></input>
+                            {errors.title && (
+                                <div className="invalid-feedback position-absolute">{errors.title}</div>
+                            )}
+                        </div>
+                        <hr/>
+                        <div className="mb-4">
                             <label htmlFor="texto" className="form-label">Texto</label>
                             <textarea className={`form-control ${errors.text && 'is-invalid'}`} id="texto" value={text} onChange={(e) => setText(e.target.value)}></textarea>
                             {errors.text && (
                                 <div className="invalid-feedback position-absolute">{errors.text}</div>
                             )}
                         </div>
-                        <hr className="mb-5"/>
+                        <hr className="mb-3"/>
                         <button type="submit" className="btn btn-primary w-100">Enviar</button>
                     </form>
                 </div>
@@ -120,9 +145,14 @@ export default function Map() {
                             ))}
                             {selectedMarker && (
                                 <InfoWindow position={{ lat: selectedMarker.latitude, lng: selectedMarker.longitude }} onCloseClick={() => {setSelectedMarker(null)}}>
-                                    <div>
-                                        {selectedMarker.text}
-                                        <br />
+                                    <div className="text-center">
+                                        <div>
+                                            <h6>{selectedMarker.title}</h6>
+                                        </div>
+                                        <div>
+                                            {formatText(selectedMarker.text, 50)}
+                                        </div>
+                                        <br/>
                                         <button className="btn btn-danger w-100 p-0" onClick={() => {removeMarker(selectedMarker.id)}}>Remover</button>
                                     </div>
                                 </InfoWindow>

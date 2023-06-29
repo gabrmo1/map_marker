@@ -11,9 +11,9 @@ const getMarkers = async (req, res) => {
 };
 
 const createMarker = async (req, res) => {
-    const {latitude, longitude, text} = req.body;
+    const {latitude, longitude, title, text} = req.body;
 
-    if (!latitude || !longitude || !text) {
+    if (!latitude || !longitude || !title || !text) {
         return res.status(400).json({error: 'Nenhum dos dados pode estar vazio.'});
     }
     if (isNaN(latitude) || isNaN(longitude)) {
@@ -27,7 +27,7 @@ const createMarker = async (req, res) => {
     }
 
     try {
-        const marker = await Marker.create({latitude, longitude, text});
+        const marker = await Marker.create({latitude, longitude, title, text});
         return res.status(201).json(marker);
     } catch (err) {
         return res.status(500).json({error: 'Ocorreu um erro ao criar o marcador.', err});
