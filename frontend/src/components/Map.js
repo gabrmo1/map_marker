@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {GoogleMap, LoadScript} from '@react-google-maps/api';
 import '../index.css'
+import {doFetchBody} from "./api";
 
 const containerStyle = {
     width: '800px',
@@ -32,7 +33,10 @@ export default function Map() {
 
         if (Object.keys(newErrors).length === 0) {
             try {
-                //enviar os dados para o backend
+                doFetchBody('http://localhost:5001/api/markers', 'POST', {latitude, longitude, text})
+                    .then(() => {
+
+                    });
             } catch (error) {
                 console.error('Failed to save marker:', error);
             }
@@ -75,7 +79,7 @@ export default function Map() {
                 </div>
                 <div className="col-md-6 d-flex align-items-center justify-content-center">
                     <LoadScript googleMapsApiKey="AIzaSyDkEJ7mjBSZXEK8d4_Cq_x9SXi_ZAjvaiA">
-                        <GoogleMap mapContainerClassName="bordered" mapContainerStyle={containerStyle} center={center} zoom={2} options={{ disableDefaultUI: true }}>
+                        <GoogleMap mapContainerClassName="bordered" mapContainerStyle={containerStyle} center={center} zoom={2} options={{disableDefaultUI: true}}>
                         </GoogleMap>
                     </LoadScript>
                 </div>
