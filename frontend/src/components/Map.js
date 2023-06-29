@@ -54,6 +54,26 @@ export default function Map() {
         setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
     };
 
+    const handleMarkerDrag = (event) => {
+        const {latLng} = event;
+        const lat = latLng.lat();
+        const lng = latLng.lng();
+
+        setLatitude(lat);
+        setLongitude(lng);
+
+        const newMarker = {
+            id: null,
+            latitude: lat,
+            longitude: lng,
+            text: '',
+        };
+
+        const newList = markers.filter(marker => marker.id != null);
+        setMarkers(newList);
+        setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
+    };
+
     function handleSubmit(event) {
         event.preventDefault();
 
@@ -162,7 +182,7 @@ export default function Map() {
                     <LoadScript googleMapsApiKey="AIzaSyDkEJ7mjBSZXEK8d4_Cq_x9SXi_ZAjvaiA">
                         <GoogleMap mapContainerClassName="radius-border" mapContainerStyle={containerStyle} center={center} zoom={2} options={{disableDefaultUI: true}} onClick={handleMapClick} onLoad={fetchMarkers}>
                             {markers.map((marker) => (
-                                <Marker key={marker.id} position={{lat: marker.latitude, lng: marker.longitude}} title={marker.text} onClick={() => setSelectedMarker(marker)}/>
+                                <Marker key={marker.id} position={{lat: marker.latitude, lng: marker.longitude}} title={marker.text} onClick={() => setSelectedMarker(marker)} draggable={(marker.id === null)} onDragEnd={handleMarkerDrag}/>
                             ))}
                             {selectedMarker && (
                                 <InfoWindow position={{ lat: selectedMarker.latitude, lng: selectedMarker.longitude }} onCloseClick={() => {setSelectedMarker(null)}}>
