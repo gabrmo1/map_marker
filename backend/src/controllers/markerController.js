@@ -1,5 +1,17 @@
 const Marker = require('../models/Marker')
 
+const getMarkers = async (req, res) => {
+    try {
+        const markers = await Marker.findAll();
+
+        return res.status(200).json(markers);
+    } catch (error) {
+        console.error('Error fetching markers:', error);
+
+        return res.status(500).json({error: 'An error occurred while fetching the markers'});
+    }
+};
+
 const createMarker = async (req, res) => {
     const {latitude, longitude, text} = req.body;
 
@@ -25,5 +37,6 @@ const createMarker = async (req, res) => {
 }
 
 module.exports = {
-    createMarker
+    createMarker,
+    getMarkers
 };
