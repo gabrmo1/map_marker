@@ -1,6 +1,7 @@
 import React, {useState} from "react";
-import {GoogleMap, LoadScript} from '@react-google-maps/api';
+import {GoogleMap, LoadScript, Marker} from '@react-google-maps/api';
 import '../index.css'
+import {doFetch, doFetchBody} from "./api";
 
 const containerStyle = {
     width: '800px',
@@ -13,6 +14,22 @@ export default function Map() {
     const [longitude, setLongitude] = useState('');
     const [text, setText] = useState('');
     const [errors, setErrors] = useState({});
+    const [markers, setMarkers] = useState([]);
+
+    function fetchMarkers() {
+        try {
+            doFetch('http://localhost:5001/api/markers', 'GET')
+                .then((response) => {
+                    if (response) {
+                        response.json().then((data) => {
+                            setMarkers(data);
+                        })
+                    }
+                });
+        } catch (error) {
+            console.error('Failed to fetch markers:', error);
+        }
+    }
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -32,7 +49,10 @@ export default function Map() {
 
         if (Object.keys(newErrors).length === 0) {
             try {
-                //enviar os dados para o backend
+                doFetchBody('http://localhost:5001/api/markers', 'POST', {latitude, longitude, text})
+                    .then(() => {
+                        fetchMarkers();
+                    });
             } catch (error) {
                 console.error('Failed to save marker:', error);
             }
@@ -75,7 +95,10 @@ export default function Map() {
                 </div>
                 <div className="col-md-6 d-flex align-items-center justify-content-center">
                     <LoadScript googleMapsApiKey="AIzaSyDkEJ7mjBSZXEK8d4_Cq_x9SXi_ZAjvaiA">
-                        <GoogleMap mapContainerClassName="bordered" mapContainerStyle={containerStyle} center={center} zoom={2} options={{ disableDefaultUI: true }}>
+                        <GoogleMap mapContainerClassName="bordered" mapContainerStyle={containerStyle} center={center} zoom={2} options={{disableDefaultUI: true}} onLoad={fetchMarkers}>
+                            {markers.map((marker) => (
+                                <Marker key={marker.id} position={{lat: marker.latitude, lng: marker.longitude}} title={marker.text}/>
+                            ))}
                         </GoogleMap>
                     </LoadScript>
                 </div>
