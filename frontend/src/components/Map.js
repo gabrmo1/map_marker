@@ -33,6 +33,27 @@ export default function Map() {
         }
     }
 
+    const handleMapClick = (event) => {
+        setSelectedMarker(null);
+
+        const lat = event.latLng.lat();
+        const lng = event.latLng.lng();
+
+        setLatitude(lat);
+        setLongitude(lng);
+
+        const newMarker = {
+            id: null,
+            latitude: lat,
+            longitude: lng,
+            text: '',
+        };
+
+        const newList = markers.filter(marker => marker.id != null);
+        setMarkers(newList);
+        setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
+    };
+
     function handleSubmit(event) {
         event.preventDefault();
 
@@ -139,7 +160,7 @@ export default function Map() {
                 </div>
                 <div className="col-md-6 d-flex align-items-center justify-content-center">
                     <LoadScript googleMapsApiKey="AIzaSyDkEJ7mjBSZXEK8d4_Cq_x9SXi_ZAjvaiA">
-                        <GoogleMap mapContainerClassName="bordered" mapContainerStyle={containerStyle} center={center} zoom={2} options={{disableDefaultUI: true}} onLoad={fetchMarkers}>
+                        <GoogleMap mapContainerClassName="radius-border" mapContainerStyle={containerStyle} center={center} zoom={2} options={{disableDefaultUI: true}} onClick={handleMapClick} onLoad={fetchMarkers}>
                             {markers.map((marker) => (
                                 <Marker key={marker.id} position={{lat: marker.latitude, lng: marker.longitude}} title={marker.text} onClick={() => setSelectedMarker(marker)}/>
                             ))}

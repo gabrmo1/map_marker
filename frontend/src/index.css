@@ -19,6 +19,6 @@ body {
   text-shadow: 2px 2px 2px #fff;
 }
 
-.bordered {
+.radius-border {
   border-radius: 10px;
 }
