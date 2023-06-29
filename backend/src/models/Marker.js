@@ -10,8 +10,12 @@ const Marker = sequelize.define('Marker', {
         type: DataTypes.FLOAT,
         allowNull: false,
     },
-    text: {
+    title: {
         type: DataTypes.STRING,
+        allowNull: false,
+    },
+    text: {
+        type: DataTypes.TEXT,
         allowNull: false,
     },
 });
