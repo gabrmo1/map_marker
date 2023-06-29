@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {GoogleMap, LoadScript, Marker} from '@react-google-maps/api';
+import {GoogleMap, LoadScript, Marker, InfoWindow} from '@react-google-maps/api';
 import '../index.css'
 import {doFetch, doFetchBody} from "./api";
 
@@ -15,6 +15,7 @@ export default function Map() {
     const [text, setText] = useState('');
     const [errors, setErrors] = useState({});
     const [markers, setMarkers] = useState([]);
+    const [selectedMarker, setSelectedMarker] = useState(null);
 
     function fetchMarkers() {
         try {
@@ -97,8 +98,15 @@ export default function Map() {
                     <LoadScript googleMapsApiKey="AIzaSyDkEJ7mjBSZXEK8d4_Cq_x9SXi_ZAjvaiA">
                         <GoogleMap mapContainerClassName="bordered" mapContainerStyle={containerStyle} center={center} zoom={2} options={{disableDefaultUI: true}} onLoad={fetchMarkers}>
                             {markers.map((marker) => (
-                                <Marker key={marker.id} position={{lat: marker.latitude, lng: marker.longitude}} title={marker.text}/>
+                                <Marker key={marker.id} position={{lat: marker.latitude, lng: marker.longitude}} title={marker.text} onClick={() => setSelectedMarker(marker)}/>
                             ))}
+                            {selectedMarker && (
+                                <InfoWindow position={{ lat: selectedMarker.latitude, lng: selectedMarker.longitude }} onCloseClick={() => {setSelectedMarker(null)}}>
+                                    <div>
+                                        {selectedMarker.text}
+                                    </div>
+                                </InfoWindow>
+                            )}
                         </GoogleMap>
                     </LoadScript>
                 </div>
