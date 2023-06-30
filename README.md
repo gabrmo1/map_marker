@@ -1,6 +1,4 @@
-# Meu Projeto
-
-Este é o repositório do meu projeto, que consiste em um backend NodeJS e um frontend React.
+# React Maps
 
 ## Backend
 
