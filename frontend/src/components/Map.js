@@ -18,43 +18,31 @@ export default function Map() {
     const [markers, setMarkers] = useState([]);
     const [selectedMarker, setSelectedMarker] = useState(null);
 
-    function fetchMarkers() {
-        try {
-            doFetch('http://localhost:5001/api/markers', 'GET')
-                .then((response) => {
-                    if (response) {
-                        response.json().then((data) => {
-                            setMarkers(data);
-                        })
-                    }
-                });
-        } catch (error) {
-            console.error('Failed to fetch markers:', error);
-        }
-    }
-
     const handleMapClick = (event) => {
         setSelectedMarker(null);
-
-        const lat = event.latLng.lat();
-        const lng = event.latLng.lng();
-
-        setLatitude(lat);
-        setLongitude(lng);
-
-        const newMarker = {
-            id: null,
-            latitude: lat,
-            longitude: lng,
-            text: '',
-        };
-
-        const newList = markers.filter(marker => marker.id != null);
-        setMarkers(newList);
-        setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
+        setNewMarkerPosition(event);
     };
 
     const handleMarkerDrag = (event) => {
+        setNewMarkerPosition(event);
+    };
+
+    function fetchMarkers() {
+        doFetch('http://localhost:5001/api/markers', 'GET')
+            .then((response) => {
+                if (response) {
+                    response.json().then((data) => {
+                        setMarkers(data);
+                    })
+                }
+            }).catch((err) => {
+                if (err) {
+                    alert(err);
+                }
+        });
+    }
+
+    function setNewMarkerPosition(event) {
         const {latLng} = event;
         const lat = latLng.lat();
         const lng = latLng.lng();
@@ -62,17 +50,10 @@ export default function Map() {
         setLatitude(lat);
         setLongitude(lng);
 
-        const newMarker = {
-            id: null,
-            latitude: lat,
-            longitude: lng,
-            text: '',
-        };
-
         const newList = markers.filter(marker => marker.id != null);
         setMarkers(newList);
-        setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
-    };
+        setMarkers((prevMarkers) => [...prevMarkers, {id: null, latitude: lat, longitude: lng, text: ''}]);
+    }
 
     function handleSubmit(event) {
         event.preventDefault();
