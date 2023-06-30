@@ -1,6 +1,9 @@
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize('', {});
+const sequelize = new Sequelize('postgres://postgres:Maps123!@db:5432/maps', {
+    host: 'db',
+    dialect: 'postgres',
+});
 
 sequelize
     .authenticate()
