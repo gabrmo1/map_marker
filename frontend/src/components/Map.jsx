@@ -117,7 +117,7 @@ export default function Map() {
       null, /* size is determined at runtime */
       null, /* origin is 0,0 */
       null, /* anchor is bottom center of the scaled image */
-      new window.google.maps.Size(26, 37),
+      new window.google.maps.Size(15, 24),
     );
   }
 
