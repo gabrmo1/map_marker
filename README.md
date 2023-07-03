@@ -61,6 +61,17 @@ Se você preferir executar o projeto sem o Docker Compose, siga os passos abaixo
       cd frontend
       npm start
    ```
+   
+## Instruções de uso
+Ao acessar a página da aplicação, verá um **formulário à esquerda** e um **mapa à direita**. Ao preenchar os campos do formulário, 
+criará um marcador personalizado no mapa conforme os dados que informou. O mapa é interativo, pode **clicar nele para
+definir as propriedades de latitude e longitude** do formulário automaticamente, bem como pode **arrastar os marcadores não salvos** para alterar
+a latitude e longitude deles.
+
+Os marcadores azuis são aqueles que ainda não foram persistidos, e os vermelhos são aqueles que já foram persistidos. 
+
+Pode mover o mapa "puxando-o" com o mouse, e pode aumentar/reduzir o zoom através do scroll.
+
 ## Contribuição
 
 Fique à vontade para contribuir com este projeto. Você pode enviar pull requests para correções de bugs, melhorias e novas funcionalidades.
