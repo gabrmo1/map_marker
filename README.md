@@ -1,12 +1,25 @@
 # React Maps
 
-## Backend
+## Tecnologias utilizadas:
+[![Icons](https://skillicons.dev/icons?i=nodejs,react,postgres,express,sequelize,docker&theme=light)](https://skillicons.dev)
 
-O backend foi desenvolvido utilizando NodeJS e gerenciado pelo npm.
+## Descrição
+O intuito deste projeto é criar marcadores em um mapa. Os marcadores podem ser inseridos a partir de latitude/longitude e/ou cliques no mapa.
+Os marcadores podem conter descrição, templates de html com fotos, etc. Eles também podem ser criados, editados e excluídos.
 
-## Frontend
+---
 
-O frontend foi desenvolvido utilizando React e gerenciado pelo npm.
+## Instruções de uso
+Ao acessar a página da aplicação, verá um **formulário à esquerda** e um **mapa à direita**. Ao preenchar os campos do formulário,
+criará um marcador personalizado no mapa conforme os dados que informou. O mapa é interativo, pode **clicar para
+definir as propriedades de latitude e longitude** do formulário automaticamente, bem como pode **arrastar os marcadores não salvos** para alterar
+a posição deles.
+
+Os marcadores salvos são exibidos em vermelho, enquanto que os marcadores que ainda não foram salvos são exibidos na cor azul.
+
+Pode mover o mapa "puxando-o" com o mouse, e pode aumentar/reduzir o zoom através do scroll.
+
+---
 
 ## Configuração e Execução
 
@@ -14,63 +27,46 @@ O frontend foi desenvolvido utilizando React e gerenciado pelo npm.
 
 Se você tiver o Docker Compose instalado, siga os passos abaixo para executar o projeto:
 
-1. Certifique-se de que o Docker Compose esteja instalado no seu sistema.
-2. Abra um terminal e navegue até o diretório raiz do projeto.
-3. instale as dependências do backend e frontend:
-   ```bash
-      cd frontend
-      npm install
-      
-      cd ../backend
-      npm install
-      
-      cd .. 
-   ```
-4. Execute o seguinte comando para iniciar os containers do backend, frontend e banco de dados:
+1. Execute o seguinte comando para iniciar os containers do backend, frontend e banco de dados:
    ```bash
       docker-compose up
    ```
-5. Acesse a aplicação pelo seu navegador, que estará acessível em http://localhost:3000.
+2. Acesse a aplicação pelo seu navegador, que estará acessível em http://localhost:3000.
 
-### Sem Docker compose 
+### Execução Manual (Sem Docker Compose)
+Se preferir executar o projeto localmente, sem Docker Compose, siga os passos abaixo:
 
-Se você preferir executar o projeto sem o Docker Compose, siga os passos abaixo:
+#### 1. Pré-requisitos:
+- Node.js 20+
+- PostgreSQL em execução local (ou em outro host)
+- Variáveis de ambiente ou configuração do banco no arquivo [database.js](backend/src/config/database.js)
 
-1. Abra um terminal e navegue até o diretório raiz do projeto.
-2. instale as dependências do backend e frontend:
+#### 2. Instalação das dependências
    ```bash
-      cd frontend
-      npm install
-      
-      cd ../backend
-      npm install
-      
-      cd ..
-   ```
-3. vá até o arquivo de configuração [database.js](backend/src/config/database.js) e altere as propriedades para as do banco de dados da sua preferência.
-4. Inicie o serviço backend:
-   - No diretório raiz do projeto, execute:
-   ```bash
-      cd backend
-      npm start
-   ```
-   - Certifique-se que a mensagem ```Marker table synchronized with the model``` apareceu na console para garantir que a conexão entre o backend e o banco de dados foi estabelecida.
-5. Inicie o frontend:
-   - No diretório raiz do projeto, execute:
-   ```bash
-      cd frontend
-      npm start
-   ```
-   
-## Instruções de uso
-Ao acessar a página da aplicação, verá um **formulário à esquerda** e um **mapa à direita**. Ao preenchar os campos do formulário, 
-criará um marcador personalizado no mapa conforme os dados que informou. O mapa é interativo, pode **clicar nele para
-definir as propriedades de latitude e longitude** do formulário automaticamente, bem como pode **arrastar os marcadores não salvos** para alterar
-a latitude e longitude deles.
+   echo "Instalando dependências do frontend..."
+   npm install --prefix ./frontend
 
-Os marcadores azuis são aqueles que ainda não foram persistidos, e os vermelhos são aqueles que já foram persistidos. 
+   echo "Instalando dependências do backend..."
+   npm install --prefix ./backend
 
-Pode mover o mapa "puxando-o" com o mouse, e pode aumentar/reduzir o zoom através do scroll.
+   echo "Instalação concluída."
+   ```
+
+#### 3. Execução do backend:
+- A partir da raiz do projeto:
+  ```bash
+     cd backend
+     npm start
+  ```
+
+#### 4. Execução do frontend:
+- A partir da raiz do projeto:
+  ```bash
+     cd frontend
+     npm start
+  ```
+
+---
 
 ## Contribuição
 

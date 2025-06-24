@@ -163,7 +163,7 @@ export default function Map() {
           </form>
         </div>
         <div className="col-md-6 d-flex align-items-center justify-content-center">
-          <LoadScript googleMapsApiKey="AIzaSyDkEJ7mjBSZXEK8d4_Cq_x9SXi_ZAjvaiA">
+          <LoadScript googleMapsApiKey="AIzaSyCxGT6Q7lWCxS9B71BTac6-GYYfk-Mfazk">
             <GoogleMap
               mapContainerClassName="radius-border"
               mapContainerStyle={containerStyle}
