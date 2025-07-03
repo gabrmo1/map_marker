@@ -13,6 +13,8 @@ const containerStyle = {
 };
 
 export default function Map() {
+  const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
   const [center] = useState({ lat: 0, lng: 0 });
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
@@ -47,7 +49,7 @@ export default function Map() {
   };
 
   function fetchMarkers() {
-    doFetch('http://localhost:5001/api/markers', 'GET')
+    doFetch(`${backendUrl}/api/markers`, 'GET')
       .then((response) => {
         if (response) {
           response.json().then((data) => {
@@ -79,7 +81,7 @@ export default function Map() {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      doFetchBody('http://localhost:5001/api/markers', 'POST', {
+      doFetchBody(`${backendUrl}/api/markers`, 'POST', {
         latitude, longitude, title, text,
       })
         .then(() => {
@@ -94,7 +96,7 @@ export default function Map() {
       setMarkers(newMarkers);
       setSelectedMarker(null);
     } else {
-      doFetch(`http://localhost:5001/api/markers/${id}`, 'DELETE')
+      doFetch(`${backendUrl}/api/markers/${id}`, 'DELETE')
         .then(() => {
           setSelectedMarker(null);
           fetchMarkers();
@@ -102,7 +104,6 @@ export default function Map() {
     }
   }
 
-  // Usado para melhorar a visualizaçao dentro do InfoWindow
   function formatText(paramText, interval) {
     let result = '';
     for (let i = 0; i < paramText.length; i += interval) {
@@ -163,7 +164,7 @@ export default function Map() {
           </form>
         </div>
         <div className="col-md-6 d-flex align-items-center justify-content-center">
-          <LoadScript googleMapsApiKey="AIzaSyCxGT6Q7lWCxS9B71BTac6-GYYfk-Mfazk">
+          <LoadScript googleMapsApiKey={googleMapsApiKey}>
             <GoogleMap
               mapContainerClassName="radius-border"
               mapContainerStyle={containerStyle}
