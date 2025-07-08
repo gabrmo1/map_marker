@@ -1,18 +1,15 @@
-FROM node:20-alpine3.18
-
-RUN apk add --no-cache bash curl
-
+FROM eclipse-temurin:21-jdk-alpine AS builder
 WORKDIR /app
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle.kts .
+#COPY settings.gradle .
+COPY src src
+RUN chmod +x gradlew
+RUN ./gradlew bootJar --no-daemon -x test
 
-COPY package*.json ./
-
-RUN npm install
-
-COPY . .
-
-COPY wait-for-it.sh /wait-for-it.sh
-RUN chmod +x /wait-for-it.sh
-
-EXPOSE 5001
-
-CMD ["/wait-for-it.sh", "db:5432", "--", "npm", "start"]
+FROM eclipse-temurin:21-jre-alpine AS runner
+WORKDIR /app
+COPY --from=builder /app/build/libs/*.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]

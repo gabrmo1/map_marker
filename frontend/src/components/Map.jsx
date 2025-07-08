@@ -49,7 +49,7 @@ export default function Map() {
   };
 
   function fetchMarkers() {
-    doFetch(`${backendUrl}/api/markers`, 'GET')
+    doFetch(`${backendUrl}/v1/markers`, 'GET')
       .then((response) => {
         if (response) {
           response.json().then((data) => {
@@ -81,7 +81,7 @@ export default function Map() {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      doFetchBody(`${backendUrl}/api/markers`, 'POST', {
+      doFetchBody(`${backendUrl}/v1/markers`, 'POST', {
         latitude, longitude, title, text,
       })
         .then(() => {
@@ -96,7 +96,7 @@ export default function Map() {
       setMarkers(newMarkers);
       setSelectedMarker(null);
     } else {
-      doFetch(`${backendUrl}/api/markers/${id}`, 'DELETE')
+      doFetch(`${backendUrl}/v1/markers/${id}`, 'DELETE')
         .then(() => {
           setSelectedMarker(null);
           fetchMarkers();
