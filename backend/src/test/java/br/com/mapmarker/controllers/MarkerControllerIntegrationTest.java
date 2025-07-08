@@ -1,4 +1,4 @@
-package br.com.mapmarker.controller;
+package br.com.mapmarker.controllers;
 
 import br.com.mapmarker.models.dtos.MarkerDto;
 import br.com.mapmarker.models.entities.MarkerEntity;
@@ -16,8 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -39,7 +37,6 @@ class MarkerControllerIntegrationTest {
     @Autowired
     private MarkerRepository markerRepository;
 
-
     @AfterEach
     void tearDown() {
         markerRepository.deleteAll();
@@ -49,7 +46,7 @@ class MarkerControllerIntegrationTest {
     @DisplayName("Deve criar um marcador e retorná-lo na busca subsequente")
     @Transactional
     void shouldCreateMarkerAndRetrieveIt() throws Exception {
-        MarkerDto markerDto = Instancio.of(MarkerDto.class)
+        final var markerDto = Instancio.of(MarkerDto.class)
                 .ignore(Select.field(MarkerDto::id))
                 .generate(Select.field(MarkerDto::latitude), gen -> gen.doubles().range(-90.0, 90.0))
                 .generate(Select.field(MarkerDto::longitude), gen -> gen.doubles().range(-180.0, 180.0))
@@ -73,14 +70,14 @@ class MarkerControllerIntegrationTest {
     @Test
     @DisplayName("Deve retornar 400 Bad Request ao tentar criar marcador com dados inválidos")
     void shouldReturnBadRequestWhenCreatingInvalidMarker() throws Exception {
-        MarkerDto invalidMarkerDto = Instancio.of(MarkerDto.class)
+        final var invalidMarkerDto = Instancio.of(MarkerDto.class)
                 .ignore(Select.field(MarkerDto::id))
                 .set(Select.field(MarkerDto::latitude), -90.1)
                 .create();
 
         mockMvc.perform(post("/v1/markers")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(invalidMarkerDto)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidMarkerDto)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").exists());
     }
@@ -89,30 +86,32 @@ class MarkerControllerIntegrationTest {
     @DisplayName("Deve deletar um marcador existente com sucesso")
     @Transactional
     void shouldDeleteExistingMarkerSuccessfully() throws Exception {
-
-        MarkerEntity markerEntity = Instancio.of(MarkerEntity.class).ignore(Select.field(MarkerEntity::getId)).create();
-        MarkerEntity savedMarker = markerRepository.save(markerEntity);
-
+        final var markerEntity = Instancio.of(MarkerEntity.class)
+                .ignore(Select.field(MarkerEntity::getId))
+                .create();
+        final var savedMarker = markerRepository.save(markerEntity);
 
         mockMvc.perform(delete("/v1/markers/{id}", savedMarker.getId())).andExpect(status().isOk());
 
-
-        Optional<MarkerEntity> deletedMarker = markerRepository.findById(savedMarker.getId());
+        final var deletedMarker = markerRepository.findById(savedMarker.getId());
         assertFalse(deletedMarker.isPresent());
     }
 
     @Test
     @DisplayName("Deve retornar 400 Bad Request ao tentar deletar com ID inválido")
     void shouldReturnBadRequestWhenDeletingWithInvalidId() throws Exception {
-
-        mockMvc.perform(delete("/v1/markers/{id}", -1L)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.message").exists());
+        mockMvc.perform(delete("/v1/markers/{id}", -1L))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").exists());
     }
 
     @Test
     @DisplayName("Deve retornar lista vazia quando não há marcadores no banco de dados")
     void shouldReturnEmptyListWhenNoMarkersInDatabase() throws Exception {
-
-
-        mockMvc.perform(get("/v1/markers")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(0))).andExpect(content().json("[]"));
+        mockMvc.perform(get("/v1/markers"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)))
+                .andExpect(content().json("[]"));
     }
+
 }

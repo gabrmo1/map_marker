@@ -1,1 +1,1 @@
-rootProject.name = "mapmarker"
+rootProject.name = "mapmarker-backend"

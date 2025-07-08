@@ -7,7 +7,7 @@ app:
 
 spring:
   application:
-    name: mapmarker
+    name: mapmarker-backend
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/maps}
