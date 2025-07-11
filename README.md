@@ -1,7 +1,7 @@
 # React Maps
 
 ## Tecnologias utilizadas:
-[![Icons](https://skillicons.dev/icons?i=nodejs,react,postgres,express,sequelize,docker&theme=light)](https://skillicons.dev)
+[![Icons](https://skillicons.dev/icons?i=react,javascript,java,spring,postgres,docker&theme=light)](https://skillicons.dev)
 
 ## Descrição
 O intuito deste projeto é criar marcadores em um mapa. Os marcadores podem ser inseridos a partir de latitude/longitude e/ou cliques no mapa.
@@ -29,42 +29,44 @@ Se você tiver o Docker Compose instalado, siga os passos abaixo para executar o
 
 1. Execute o seguinte comando para iniciar os containers do backend, frontend e banco de dados:
    ```bash
-      docker-compose up
+   docker-compose up
    ```
 2. Acesse a aplicação pelo seu navegador, que estará acessível em http://localhost:3000.
 
-### Execução Manual (Sem Docker Compose)
+---
+
+### Sem Docker Compose (Execução Manual)
 Se preferir executar o projeto localmente, sem Docker Compose, siga os passos abaixo:
 
 #### 1. Pré-requisitos:
-- Node.js 20+
-- PostgreSQL em execução local (ou em outro host)
-- Variáveis de ambiente ou configuração do banco no arquivo [database.js](backend/src/config/database.js)
+- **NodeJs 20** (ou compatível)
+- **Jdk 21** (ou compatível)
+- **PostgreSQL** em execução local (ou em outro host)
+- **Configuração do banco no arquivo** [application.yml](backend/src/main/resources/application.yml)
+    - **Ou via enviroment variable**, definindo *SPRING_DATASOURCE_URL*, *SPRING_DATASOURCE_USERNAME*, *SPRING_DATASOURCE_PASSWORD*
 
 #### 2. Instalação das dependências
    ```bash
-   echo "Instalando dependências do frontend..."
-   npm install --prefix ./frontend
-
-   echo "Instalando dependências do backend..."
-   npm install --prefix ./backend
-
-   echo "Instalação concluída."
+   cd frontend; npm install; cd ..
    ```
 
 #### 3. Execução do backend:
 - A partir da raiz do projeto:
-  ```bash
-     cd backend
-     npm start
-  ```
+
+Faça build do projeto com:
+   ```bash
+   cd backend; ./gradlew bootJar --no-daemon -x test; cd ..
+   ```
+Execute a aplicação com:
+   ```bash
+   java -jar .\backend\build\libs\mapmarker-backend-0.0.1-SNAPSHOT.jar
+   ```
 
 #### 4. Execução do frontend:
 - A partir da raiz do projeto:
-  ```bash
-     cd frontend
-     npm start
-  ```
+   ```bash
+   cd frontend; npm start;
+   ```
 
 ---
 
